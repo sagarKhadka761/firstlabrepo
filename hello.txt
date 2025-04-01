@@ -1,4 +1,2 @@
-this is a test file
-we learn git here
-adding new lines 
-editing file
+print("First devops lab")
+print("Using GitHub")
