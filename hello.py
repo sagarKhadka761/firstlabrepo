@@ -81,6 +81,40 @@ CREATE TRIGGER employee_added_trigger
 AFTER INSERT ON employees
 FOR EACH ROW
 EXECUTE FUNCTION log_employee_addition();
+curl -X POST http://admin:admin@localhost:5984/studentdb \
+-H "Content-Type: application/json" \
+-d '{
+  "SRN": "1",
+  "Sname": "Rahul",
+  "Degree": "BCA",
+  "Sem": 5,
+  "CGPA": 7.0
+}'
+
+curl -X PUT http://localhost:5984/library/_design/book_views \
+-H "Content-Type: application/json" \
+-d '{
+"_id": "_design/book_views",
+"views": {
+"by_author": {
+"map": "function (doc) { if (doc.type === \"book\" && doc.author) {
+emit(doc.author, doc.title); } }"
+}
+},
+"language": "javascript"
+}'
+
+CREATE (a:User {UserID: 1, Username: "Alice"}),
+(f)-[:FOLLOWS]->(b);
+MATCH (me:User {Username: 'Jane'})-[:FOLLOWS]->(:User)-[:FOLLOWS]->(suggested:User)
+WHERE NOT (me)-[:FOLLOWS]->(suggested) AND me <> suggested
+RETURN DISTINCT suggested.Username AS SuggestedToFollow  collect
+
+
+HSET employee:101 Name "Alice" Department "HR" Position "Manager" Salary 60000
+SADD department:HR 101 103
+ZADD employees_by_salary 60000 101 75000 102 45000 103 55000 104
+ZRANGEBYSCORE employees_by_salary 50001 +inf
 
 
 
